@@ -3,7 +3,13 @@ package rizzutih;
 import org.junit.Before;
 import org.junit.Test;
 import rizzutih.Exercises.Ch1ArrayAndStrings;
+import sun.jvm.hotspot.jdi.IntegerTypeImpl;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -106,5 +112,43 @@ public class Ch1ArrayAndStringsTest {
     @Test
     public void shouldReturnAabbbcWhenAabbbcIsPassedIn() {
         assertEquals("aabbbc", ch1ArrayAndStrings.stringCompression("aabbbc"));
+        Map<Integer, BigDecimal> offersMap = new HashMap<>();
+        offersMap.put(3, BigDecimal.valueOf(130));
+
+        Map<Integer, BigDecimal> quantityIndividualPriceMap = new HashMap<>();
+        quantityIndividualPriceMap.put(5, BigDecimal.valueOf(50));
+
+        Map<String, Map<Integer, BigDecimal>> basket = new HashMap<>();
+        basket.put("a", quantityIndividualPriceMap);
+
+        Iterator<Map.Entry<String, Map<Integer, BigDecimal>>> iterator = basket.entrySet().iterator();
+
+        while (iterator.hasNext()){
+            Map.Entry<String, Map<Integer, BigDecimal>> entry = iterator.next();
+            Iterator<Map.Entry<Integer, BigDecimal>> iterator2 = entry.getValue().entrySet().iterator();
+
+            while (iterator2.hasNext()){
+                Map.Entry<Integer, BigDecimal> entry2 = iterator2.next();
+                Integer totalItems = entry2.getKey();
+                BigDecimal individualPrice = entry2.getValue();
+
+                int count = 0;
+                BigDecimal tmpPrice = BigDecimal.ZERO;
+                BigDecimal finalPrice = BigDecimal.ZERO;
+
+                for(int i = 1; i <= totalItems; i++){
+                    count++;
+                    if(count == offersMap.entrySet().stream().findFirst().get().getKey()){
+                        count=0;
+                        tmpPrice = BigDecimal.ZERO;
+                        finalPrice = finalPrice.add(offersMap.entrySet().stream().findFirst().get().getValue());
+                    } else {
+                        tmpPrice = tmpPrice.add(individualPrice);
+                    }
+                }
+                finalPrice = finalPrice.add(tmpPrice);
+                System.out.println(finalPrice.toPlainString());
+            }
+        }
     }
 }
